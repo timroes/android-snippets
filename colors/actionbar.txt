@@ -1,0 +1,14 @@
+The colors for the Holo ActionBar (in Android 4.0) are:
+
+		Light Theme	Dark Theme	Light (Dark AB)
+		
+* The ActionBar background color
+ActionBar	#DDDDDD		#222222		#222222
+* The background color of stacked tabs
+Tabs		#CDCDCD		#111111		#555555
+* The background color of the overflow menu
+Menu Overflow	#F5F5F5		#282828		#282828
+* The highlight color for button/menu clicks
+Highlight	#33B5E5		#33B5E5		#33B5E5
+* The background of the Contextual ActionBar
+CAB		#FFFFFF		#002E3E		#002E3E
