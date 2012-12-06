@@ -12,3 +12,6 @@ Menu Overflow	#F5F5F5		#282828		#282828
 Highlight	#33B5E5		#33B5E5		#33B5E5
 * The background of the Contextual ActionBar
 CAB		#FFFFFF		#002E3E		#002E3E
+
+All information has been taken from the Adobe Photoshop Sources of 
+the Android Design Team (http://developer.android.com/design/downloads/index.html).
