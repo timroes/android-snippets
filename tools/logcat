@@ -78,13 +78,13 @@ KNOWN_TAGS = {
     "AndroidRuntime": BLACK,
 }
 KNOWN_BG_TAGS = {
-	"dalvikvm": YELLOW,
-	"dalvikvm-heap": YELLOW,
+    "dalvikvm": YELLOW,
+    "dalvikvm-heap": YELLOW,
     "ActivityManager": CYAN,
     "ActivityThread": CYAN,
     "System.err": RED,
     "System.out": WHITE,
-	"WindowManager": GREEN,
+    "WindowManager": GREEN,
     "AndroidRuntime": MAGENTA,
 }
 
