@@ -11,7 +11,7 @@
 	You can also pipe some logcat output into this script.
 
 	If you use this in conjunction with some color output scripts, 
-	use this first and pipe it's output to the color script. Otherwise
+	use this first and pipe its output to the color script. Otherwise
 	you might get false output.
 '''
 
