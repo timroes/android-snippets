@@ -42,7 +42,9 @@ def format(fg=None, bg=None, bright=False, bold=False, dim=False, reset=False):
     codes = []
     if reset: codes.append("0")
     else:
-        if not fg is None: codes.append("3%d" % (fg))
+        if not fg is None: 
+            if not bright: codes.append("3%d" % (fg))
+            else: codes.append("9%d" % (fg))
         if not bg is None:
             if not bright: codes.append("4%d" % (bg))
             else: codes.append("10%d" % (bg))
@@ -72,21 +74,11 @@ KNOWN_TAGS = {
     "Process": BLUE,
     "ActivityManager": BLACK,
     "ActivityThread": BLACK,
-    "System.err": BLACK,
-    "System.out": BLACK,
     "WindowManager": BLACK,
     "AndroidRuntime": BLACK,
+    "Choreographer": BLACK,
 }
-KNOWN_BG_TAGS = {
-    "dalvikvm": YELLOW,
-    "dalvikvm-heap": YELLOW,
-    "ActivityManager": CYAN,
-    "ActivityThread": CYAN,
-    "System.err": RED,
-    "System.out": WHITE,
-    "WindowManager": GREEN,
-    "AndroidRuntime": MAGENTA,
-}
+HIGHLIGHT_TAGS = KNOWN_TAGS.copy()
 
 def allocate_color(tag):
     # this will allocate a unique format for the given tag
@@ -99,14 +91,6 @@ def allocate_color(tag):
     LAST_USED.append(color)
     return color
 
-def allocate_bg_color(tag):
-    if not tag in KNOWN_BG_TAGS:
-	    color = BLACK
-    else:
-        color = KNOWN_BG_TAGS[tag]
-	return color
-
-
 RULES = {
     #re.compile(r"([\w\.@]+)=([\w\.@]+)"): r"%s\1%s=%s\2%s" % (format(fg=BLUE), format(fg=GREEN), format(fg=BLUE), format(reset=True)),
 }
@@ -117,11 +101,11 @@ PROCESS_WIDTH = 8 # 8 or -1
 HEADER_SIZE = TAGTYPE_WIDTH + 1 + TAG_WIDTH + 1 + PROCESS_WIDTH + 1
 
 TAGTYPES = {
-    "V": "%s%s%s " % (format(fg=WHITE, bg=BLACK), "V".center(TAGTYPE_WIDTH), format(fg=WHITE, bg=BLACK)),
-    "D": "%s%s%s " % (format(fg=BLACK, bg=CYAN), "D".center(TAGTYPE_WIDTH), format(fg=CYAN, bg=BLACK)),
-    "I": "%s%s%s " % (format(fg=BLACK, bg=GREEN), "I".center(TAGTYPE_WIDTH), format(fg=GREEN, bg=BLACK)),
-    "W": "%s%s%s " % (format(fg=BLACK, bg=YELLOW), "W".center(TAGTYPE_WIDTH), format(fg=YELLOW, bg=BLACK)),
-    "E": "%s%s%s " % (format(fg=BLACK, bg=RED), "E".center(TAGTYPE_WIDTH), format(fg=RED, bg=BLACK)),
+    "V": "%s%s%s%s " % (format(fg=WHITE, bg=BLACK), "V".center(TAGTYPE_WIDTH), format(reset=True), format(fg=WHITE)),
+    "D": "%s%s%s%s " % (format(fg=BLACK, bg=CYAN), "D".center(TAGTYPE_WIDTH), format(reset=True), format(fg=CYAN)),
+    "I": "%s%s%s%s " % (format(fg=BLACK, bg=GREEN), "I".center(TAGTYPE_WIDTH), format(reset=True), format(fg=GREEN)),
+    "W": "%s%s%s%s " % (format(fg=BLACK, bg=YELLOW), "W".center(TAGTYPE_WIDTH), format(reset=True), format(fg=YELLOW)),
+    "E": "%s%s%s%s " % (format(fg=BLACK, bg=RED), "E".center(TAGTYPE_WIDTH), format(reset=True), format(fg=RED)),
 }
 
 retag = re.compile("^([A-Z])/([^\(]+)\(([^\)]+)\): (.*)$")
@@ -149,18 +133,19 @@ while True:
         # center process info
         if PROCESS_WIDTH > 0:
             owner = owner.strip().rjust(PROCESS_WIDTH)
-            linebuf.write("%s%s %s" % (format(fg=BLACK, bg=BLACK, bright=True), owner, format(reset=True)))
+            linebuf.write("%s%s %s" % (format(fg=WHITE, bright=True), owner, format(reset=True)))
 
         # right-align tag title and allocate color if needed
         tag = tag.strip()
+	highlight = tag in HIGHLIGHT_TAGS
         color = allocate_color(tag)
-        bgcolor = allocate_bg_color(tag)
         tag = tag[-TAG_WIDTH:].rjust(TAG_WIDTH)
-        linebuf.write("%s%s %s" % (format(fg=color, bg=bgcolor, dim=False), tag, format(reset=True)))
+        linebuf.write("%s" % (format(fg=color, bright=highlight, bold=not highlight, dim=False)))
+        linebuf.write("%s %s" % (tag, format(reset=True)))
 
         # write out tagtype colored edge
-        if not tagtype in TAGTYPES: break
-        linebuf.write(TAGTYPES[tagtype])
+        if tagtype in TAGTYPES: 
+	    linebuf.write(TAGTYPES[tagtype])
 
         # insert line wrapping as needed
         message = indent_wrap(message, HEADER_SIZE, WIDTH)
