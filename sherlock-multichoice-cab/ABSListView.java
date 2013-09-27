@@ -1,3 +1,11 @@
+/**
+ * This file is not licensed, meaning it's public domain. if that's not possible due any local restrictions
+ * or laws, or public domain doesn't mean in your area, that it doesn't hold any copyright/left/middle, 
+ * it's licensed under CC0 (http://creativecommons.org/publicdomain/zero/1.0/)
+ * 
+ * In short: Do whatever you want with it, remove the author notice, lie about where you got this, sell it, 
+ * use it as a mantra...
+ */
 package de.timroes.android.ui;
 
 import android.content.Context;
